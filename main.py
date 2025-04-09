@@ -14,7 +14,6 @@ def preprocess_data(file_path):
                                 columns=['Age', 'AnnualIncome', 'SpendingScore'])
     return df, df_normalized, scaler
 
-
 def main():
     file_path = 'Mall_Customers.csv'
     print("Escolha a questão:")

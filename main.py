@@ -149,6 +149,25 @@ def questao4(file_path):
     # Gráfico 3D
     plot_clusters_3d(df_clusters)
 
+def questao5(file_path):
+    print("\nExecutando Questão 5: Estatísticas por cluster...")
+    df_original, df_normalized, scaler = preprocess_data(file_path)
+    k = int(input("Informe o valor de K: "))
+    df_clusters, _, _ = train_kmeans(df_normalized, df_original, k)
+
+    estatisticas = df_clusters.groupby('Cluster').agg({
+        'Age': 'mean',
+        'Annual Income (k$)': 'mean',
+        'Spending Score (1-100)': 'mean'
+    }).rename(columns={
+        'Age': 'Idade Média',
+        'Annual Income (k$)': 'Renda Média (k$)',
+        'Spending Score (1-100)': 'Gasto Médio'
+    }).round(1)
+
+    print("\nEstatísticas por cluster:\n")
+    print(estatisticas)
+
 def main():
     file_path = 'Mall_Customers.csv'
 
@@ -156,7 +175,8 @@ def main():
         "1": lambda: questao1(file_path),
         "2": lambda: questao2(file_path),
         "3": lambda: questao3(file_path),
-        "4": lambda: questao4(file_path)
+        "4": lambda: questao4(file_path),
+        "5": lambda: questao5(file_path)
     }
 
     while True:
@@ -165,6 +185,7 @@ def main():
         print("2 - Seleção do número de clusters")
         print("3 - Modelagem com K-Means")
         print("4 - Visualização e análise (2D e 3D)")
+        print("5 - Estatísticas por cluster")
         print("0 - Sair")
 
         choice = input("Digite o número da questão: ")

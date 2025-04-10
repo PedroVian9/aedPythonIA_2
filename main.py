@@ -168,6 +168,54 @@ def questao5(file_path):
     print("\nEstatísticas por cluster:\n")
     print(estatisticas)
 
+def questao6(file_path):
+    print("\nExecutando Questão 6: Interpretação dos clusters...")
+
+    df_original, df_normalized, scaler = preprocess_data(file_path)
+    k = int(input("Informe o valor de K: "))
+    df_clusters, _, _ = train_kmeans(df_normalized, df_original, k)
+
+    estatisticas = df_clusters.groupby('Cluster').agg({
+        'Age': 'mean',
+        'Annual Income (k$)': 'mean',
+        'Spending Score (1-100)': 'mean'
+    }).round(1)
+
+    print("\n--- Interpretação dos Clusters ---\n")
+
+    for cluster_id, row in estatisticas.iterrows():
+        idade = row['Age']
+        renda = row['Annual Income (k$)']
+        gasto = row['Spending Score (1-100)']
+
+        if renda > 70:
+            faixa_renda = "renda alta"
+        elif renda > 40:
+            faixa_renda = "renda média"
+        else:
+            faixa_renda = "renda baixa"
+
+        if gasto > 60:
+            perfil_gasto = "gastam muito"
+        elif gasto > 40:
+            perfil_gasto = "gasto moderado"
+        else:
+            perfil_gasto = "gastam pouco"
+
+        if idade < 30:
+            faixa_idade = "jovens"
+        elif idade < 50:
+            faixa_idade = "adultos"
+        else:
+            faixa_idade = "idosos"
+
+        print(f"Cluster {cluster_id}:")
+        print(f"- Idade média: {idade:.1f} anos ({faixa_idade})")
+        print(f"- Renda média: {renda:.1f}k$ ({faixa_renda})")
+        print(f"- Gasto médio: {gasto:.1f} ({perfil_gasto})")
+        print(f"- Perfil: Clientes {faixa_idade}, com {faixa_renda}, que {perfil_gasto}.")
+        print()
+
 def main():
     file_path = 'Mall_Customers.csv'
 
@@ -176,7 +224,8 @@ def main():
         "2": lambda: questao2(file_path),
         "3": lambda: questao3(file_path),
         "4": lambda: questao4(file_path),
-        "5": lambda: questao5(file_path)
+        "5": lambda: questao5(file_path),
+        "6": lambda: questao6(file_path)
     }
 
     while True:
@@ -186,6 +235,7 @@ def main():
         print("3 - Modelagem com K-Means")
         print("4 - Visualização e análise (2D e 3D)")
         print("5 - Estatísticas por cluster")
+        print("6 - Interpretação dos clusters") 
         print("0 - Sair")
 
         choice = input("Digite o número da questão: ")
